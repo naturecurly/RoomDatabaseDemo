@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">RoomDatabaseDemo</string>
+    <string name="add_an_employee">Add an Employee</string>
+    <string name="first_name">first name</string>
+    <string name="last_name">last name</string>
 </resources>

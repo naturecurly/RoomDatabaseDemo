@@ -12,12 +12,16 @@ import java.util.*
 
 @Entity
 data class Employee(@PrimaryKey(autoGenerate = true)
-                    var uid: Int? = 0,
+                    var uid: Int,
 
-                    var firstName: String = "",
+                    var firstName: String,
 
-                    var lastName: String = "",
+                    var lastName: String,
 
                     var birthday: Date = Date()
-)
+) {
+    override fun toString(): String {
+        return "[" + this.uid + "]    " + this.firstName + " " + this.lastName
+    }
+}
 

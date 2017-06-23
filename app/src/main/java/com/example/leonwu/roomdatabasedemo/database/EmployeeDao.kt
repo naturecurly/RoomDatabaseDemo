@@ -14,10 +14,10 @@ interface EmployeeDao {
     @Query("SELECT * FROM employee")
     fun getAll(): List<Employee>
 
-    @Query("SELECT * FROM employee WHERE uid IN (:arg0)")
+    @Query("SELECT * FROM employee WHERE uid IN (:p0)")
     fun loadAllByIds(ids: Array<Int>): List<Employee>
 
-    @Query("SELECT * FROM employee WHERE firstName LIKE :arg0 AND " + "lastName LIKE :arg1 LIMIT 1")
+    @Query("SELECT * FROM employee WHERE firstName LIKE :p0 AND " + "lastName LIKE :p1 LIMIT 1")
     fun findByName(first: String, last: String): Employee
 
     @Insert

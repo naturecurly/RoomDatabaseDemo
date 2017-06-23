@@ -11,8 +11,9 @@ import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
 import com.example.leonwu.roomdatabasedemo.injection.ActivityModule
 import com.example.leonwu.roomdatabasedemo.injection.DaggerActivityComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
@@ -20,19 +21,25 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     @Inject
     lateinit var db: EmployeeDatabase
 
+    @Inject
+    lateinit var controller: EmployeeController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initialiseDagger()
-        val controller: EmployeeController = EmployeeController(db)
-        controller.addEmployees(Employee(0, "leon", "wu"))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.d("test", "test")
-                })
+        btn_add.onClick { view ->
+            controller.addEmployees(Employee(0, first_name_edit_text.text.toString(), last_name_edit_text.text.toString()))
+                    .flatMap { unit ->
+                        controller.getAllEmployees()
+                    }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ list ->
+                        updateStatus(list)
+                    })
+        }
     }
 
-    //
     fun initialiseDagger() {
         DaggerActivityComponent.builder()
                 .activityModule(ActivityModule(this))
@@ -40,5 +47,13 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                 .inject(this)
     }
 
+    fun updateStatus(list: List<Employee>) {
+        val sb: StringBuilder = StringBuilder()
+        for (em in list) {
+            sb.append(em.toString())
+            sb.append("\n")
+        }
+        database_status.text = sb.toString()
+    }
 
 }

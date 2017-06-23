@@ -13,13 +13,40 @@ import io.reactivex.schedulers.Schedulers
  */
 class EmployeeController(private val db: EmployeeDatabase) {
     fun addEmployees(employee: Employee): Observable<Unit> {
-//        return Observable.fromCallable {
-//            db.employeeDao().insertAll(employee)
-//        }.subscribeOn(Schedulers.io())
         return Observable.create<Unit> { e ->
-            db.employeeDao().insertAll(employee)
-            e.onNext(Unit)
-            e.onComplete()
+            try {
+                db.employeeDao().insertAll(employee)
+                e.onNext(Unit)
+                e.onComplete()
+            } catch (exception: Exception) {
+                e.onError(exception)
+            }
         }.subscribeOn(Schedulers.io())
     }
+
+    fun getAllEmployees(): Observable<List<Employee>> {
+        return Observable.create(object : ObservableOnSubscribe<List<Employee>> {
+            override fun subscribe(e: ObservableEmitter<List<Employee>>?) {
+                try {
+                    val list = db.employeeDao().getAll()
+                    e?.onNext(list)
+                    e?.onComplete()
+                } catch (exception: Exception) {
+                    e?.onError(exception)
+                }
+            }
+
+        }).subscribeOn(Schedulers.io())
+    }
+
+//    fun getEmployeeById(id: Int): Observable<List<Employee>>? {
+//        return Observable.create(object :ObservableOnSubscribe<List<Employee>>{
+//            override fun subscribe(e: ObservableEmitter<Employee>?) {
+//                db.employeeDao().loadAllByIds(arrayOf(id))
+//                e?.onNext()
+//                e?.onComplete()
+//            }
+//
+//        })
+//    }
 }
