@@ -3,4 +3,8 @@
     <string name="add_an_employee">Add an Employee</string>
     <string name="first_name">first name</string>
     <string name="last_name">last name</string>
+    <string name="query">query</string>
+    <string name="query_by_id">query by id</string>
+    <string name="no_result">No Result!</string>
+    <string name="delete_an_employee">delete an employee</string>
 </resources>
