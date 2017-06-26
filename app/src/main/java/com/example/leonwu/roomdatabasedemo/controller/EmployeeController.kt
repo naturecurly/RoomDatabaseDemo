@@ -24,25 +24,24 @@ class EmployeeController(private val db: EmployeeDatabase) {
 
     fun getAllEmployees(): Observable<List<Employee>> {
         return Observable.create(object : ObservableOnSubscribe<List<Employee>> {
-            override fun subscribe(e: ObservableEmitter<List<Employee>>?) {
+            override fun subscribe(e: ObservableEmitter<List<Employee>>) {
                 try {
                     val list = db.employeeDao().getAll()
-                    e?.onNext(list)
-                    e?.onComplete()
+                    e.onNext(list)
+                    e.onComplete()
                 } catch (exception: Exception) {
-                    e?.onError(exception)
+                    e.onError(exception)
                 }
             }
-
         }).subscribeOn(Schedulers.io())
     }
 
     fun getEmployeeById(id: Int): Observable<List<Employee>> {
         return Observable.create(object : ObservableOnSubscribe<List<Employee>> {
-            override fun subscribe(e: ObservableEmitter<List<Employee>>?) {
+            override fun subscribe(e: ObservableEmitter<List<Employee>>) {
                 val list = db.employeeDao().loadAllByIds(arrayOf(id))
-                e?.onNext(list)
-                e?.onComplete()
+                e.onNext(list)
+                e.onComplete()
             }
 
         }).subscribeOn(Schedulers.io())
