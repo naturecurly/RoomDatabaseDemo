@@ -21,7 +21,7 @@ interface EmployeeDao {
     fun loadAllByIds(ids: Array<Int>): List<Employee>
 
     @Query("SELECT * FROM employee WHERE firstName LIKE :first AND " + "lastName LIKE :last LIMIT 1")
-    fun findByName(first: String, last: String): Employee
+    fun findByName(first: String, last: String): Employee?
 
     @Insert
     fun insertAll(vararg employee: Employee)

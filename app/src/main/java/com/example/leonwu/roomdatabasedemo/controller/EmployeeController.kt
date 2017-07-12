@@ -23,21 +23,7 @@ class EmployeeController(private val db: EmployeeDatabase) {
         }.subscribeOn(Schedulers.io())
     }
 
-//    fun getAllEmployees(): Observable<List<Employee>> {
-//        return Observable.create(object : ObservableOnSubscribe<List<Employee>> {
-//            override fun subscribe(e: ObservableEmitter<List<Employee>>) {
-//                try {
-//                    val list = db.employeeDao().getAll()
-//                    e.onNext(list)
-//                    e.onComplete()
-//                } catch (exception: Exception) {
-//                    e.onError(exception)
-//                }
-//            }
-//        }).subscribeOn(Schedulers.io())
-//    }
-
-    fun getAllEmpolyeesLiveData():LiveData<List<Employee>>{
+    fun getAllEmployeeLiveData(): LiveData<List<Employee>> {
         return db.employeeDao().getAll()
     }
 
@@ -56,8 +42,10 @@ class EmployeeController(private val db: EmployeeDatabase) {
         return Observable.create<Employee> { e ->
             try {
                 val employee = db.employeeDao().findByName(first, last)
-                e.onNext(employee)
-                e.onComplete()
+                employee?.let {
+                    e.onNext(employee)
+                    e.onComplete()
+                }
             } catch (ex: Exception) {
                 e.onError(ex)
             }

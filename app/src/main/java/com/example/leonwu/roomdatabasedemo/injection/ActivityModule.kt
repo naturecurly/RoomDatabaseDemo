@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import com.example.leonwu.roomdatabasedemo.controller.EmployeeController
 import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
+import com.example.leonwu.roomdatabasedemo.viewmodel.MainViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -24,5 +25,11 @@ class ActivityModule(private val context: Context) {
     @Singleton
     fun provideController(db: EmployeeDatabase): EmployeeController {
         return EmployeeController(db)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFactory(controller: EmployeeController): MainViewModel.Factory {
+        return MainViewModel.Factory(context, controller)
     }
 }
