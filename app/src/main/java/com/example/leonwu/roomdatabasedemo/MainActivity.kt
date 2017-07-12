@@ -1,6 +1,11 @@
 package com.example.leonwu.roomdatabasedemo
 
+import android.arch.lifecycle.LifecycleRegistry
+import android.arch.lifecycle.LifecycleRegistryOwner
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.arch.persistence.room.Room
+import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +13,10 @@ import android.widget.Toast
 import com.example.leonwu.roomdatabasedemo.controller.EmployeeController
 import com.example.leonwu.roomdatabasedemo.database.Employee
 import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
+import com.example.leonwu.roomdatabasedemo.databinding.ActivityMainBinding
 import com.example.leonwu.roomdatabasedemo.injection.ActivityModule
 import com.example.leonwu.roomdatabasedemo.injection.DaggerActivityComponent
+import com.example.leonwu.roomdatabasedemo.viewmodel.MainViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +26,12 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), AnkoLogger {
+class MainActivity : AppCompatActivity(), AnkoLogger, LifecycleRegistryOwner {
+    private val lifecycleRegistry = LifecycleRegistry(this)
+
+    override fun getLifecycle(): LifecycleRegistry {
+        return lifecycleRegistry
+    }
 
     @Inject
     lateinit var db: EmployeeDatabase
@@ -27,19 +39,28 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     @Inject
     lateinit var controller: EmployeeController
 
+    lateinit var viewModel: MainViewModel
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         initialiseDagger()
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        binding.viewModel = viewModel
         showData()
         btn_add.onClick {
             controller.addEmployees(Employee(0, first_name_edit_text.text.toString(), last_name_edit_text.text.toString()))
-                    .flatMap { unit ->
-                        controller.getAllEmployees()
+                    .map { unit ->
+                        controller.getAllEmpolyeesLiveData()
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list ->
-                        updateStatus(list)
+                    .subscribe({
+                        //                        liveData ->
+//                        liveData.observe(this@MainActivity, Observer { list ->
+//                            viewModel.data = list.toString()
+//                        })
                     }, {}, {
                         Log.d("complete", "complete")
                     })
@@ -66,11 +87,16 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
 
     fun showData() {
-        controller.getAllEmployees()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    list ->
-                    updateStatus(list)
+//        controller.getAllEmployees()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    list ->
+//                    updateStatus(list)
+//                })
+        controller.getAllEmpolyeesLiveData()
+                .observe(this, Observer { list ->
+                    Log.d("test", list.toString())
+                    binding.viewModel.data.set(list.toString())
                 })
     }
 
