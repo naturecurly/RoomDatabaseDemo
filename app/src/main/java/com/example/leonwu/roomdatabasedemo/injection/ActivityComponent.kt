@@ -1,7 +1,6 @@
 package com.example.leonwu.roomdatabasedemo.injection
 
 import com.example.leonwu.roomdatabasedemo.MainActivity
-import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
 import dagger.Component
 import javax.inject.Singleton
 

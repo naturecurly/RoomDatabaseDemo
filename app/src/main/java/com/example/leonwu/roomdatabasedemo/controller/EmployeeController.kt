@@ -3,9 +3,10 @@ package com.example.leonwu.roomdatabasedemo.controller
 import android.arch.lifecycle.LiveData
 import com.example.leonwu.roomdatabasedemo.database.Employee
 import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
-import io.reactivex.*
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.schedulers.Schedulers
-import org.reactivestreams.Publisher
 
 /**
  * Created by leonwu on 22/6/17.

@@ -5,11 +5,8 @@ import android.arch.lifecycle.LifecycleRegistryOwner
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.example.leonwu.roomdatabasedemo.controller.EmployeeController
-import com.example.leonwu.roomdatabasedemo.database.Employee
-import com.example.leonwu.roomdatabasedemo.database.EmployeeDatabase
+import android.support.v7.app.AppCompatActivity
 import com.example.leonwu.roomdatabasedemo.databinding.ActivityMainBinding
 import com.example.leonwu.roomdatabasedemo.injection.ActivityModule
 import com.example.leonwu.roomdatabasedemo.injection.DaggerActivityComponent
