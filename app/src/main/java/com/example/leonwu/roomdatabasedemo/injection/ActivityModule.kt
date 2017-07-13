@@ -29,7 +29,5 @@ class ActivityModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideFactory(controller: EmployeeController): MainViewModel.Factory {
-        return MainViewModel.Factory(context, controller)
-    }
+    fun provideContext(): Context = context
 }

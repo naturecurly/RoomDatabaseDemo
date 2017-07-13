@@ -73,7 +73,7 @@ class MainViewModel(val context: Context, val controller: EmployeeController, va
                 })
     }
 
-    class Factory @Inject constructor(val context: Context, private val controller: EmployeeController) : ViewModelProvider.Factory {
+    class Factory @Inject constructor(private val context: Context, private val controller: EmployeeController) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>?): T {
             val viewModel = MainViewModel(context, controller, controller.getAllEmployeeLiveData())
             return viewModel as T
